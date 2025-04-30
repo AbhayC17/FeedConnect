@@ -85,7 +85,7 @@
       <input type="text" id="location" required>
 
       <label for="recipient">Select Orphanage / Old Age Home</label>
-      <select id="recipient" required>
+      <select id="acceptorDropdown" >
         <option>Loading...</option>
       </select>
 
@@ -104,26 +104,24 @@
   </div>
 
   <script>
-    function showChatBox() {
-      const recipient = document.getElementById('recipient').value;
-      if (recipient) {
-        document.getElementById('chatBox').style.display = 'block';
-      } else {
-        document.getElementById('chatBox').style.display = 'none';
-      }
-    }
+  const acceptorDataURL = "https://script.google.com/macros/s/AKfycbytpQuIpGNEWoh5oXY2KlmL1NR2C8wgrOpbb05GNg6keIvqzkuZJySX6e3Qj8UvzFuK/exec"; // Replace with your actual script URL
 
-    function sendMessage() {
-      const message = document.getElementById('chatMessage').value;
-      if (message.trim() === "") return;
-
-      const messagesContainer = document.getElementById('messages');
-      const newMessage = document.createElement('div');
-      newMessage.textContent = "You: " + message;
-      messagesContainer.appendChild(newMessage);
-      document.getElementById('chatMessage').value = "";
-    }
-  </script>
-
+  fetch(acceptorDataURL)
+    .then(res => res.json())
+    .then(data => {
+      const dropdown = document.getElementById("acceptorDropdown");
+      dropdown.innerHTML = '<option value="">-- Select an Accepting Organization --</option>';
+      data.forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        dropdown.appendChild(option);
+      });
+    })
+    .catch(error => {
+      console.error("Error fetching acceptors:", error);
+      document.getElementById("acceptorDropdown").innerHTML = '<option>Error loading data</option>';
+    });
+</script>
 </body>
 </html>
