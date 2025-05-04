@@ -1,51 +1,109 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>FeedConnect - Save Food, Feed Lives</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FeedConnect - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #e1bee7);
+      color: #333;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 900px;
+      background: white;
+      border-radius: 15px;
+      padding: 50px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 3em;
+      color: #4a148c;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 40px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .btn {
+      text-decoration: none;
+      padding: 15px 30px;
+      border-radius: 30px;
+      font-size: 1em;
+      font-weight: bold;
+      transition: 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn.donor {
+      background: linear-gradient(to right, #66bb6a, #43a047);
+      color: white;
+    }
+
+    .btn.donor:hover {
+      background: linear-gradient(to right, #43a047, #2e7d32);
+      transform: scale(1.05);
+    }
+
+    .btn.acceptor {
+      background: linear-gradient(to right, #5c6bc0, #3f51b5);
+      color: white;
+    }
+
+    .btn.acceptor:hover {
+      background: linear-gradient(to right, #3f51b5, #303f9f);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2em; }
+      .btn { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-  <header class="hero">
-    <div class="overlay">
-      <h1>FeedConnect</h1>
-      <p>Connecting surplus food with those in need</p>
-      <nav>
-        <a href="donor.html">Donate Food</a>
-        <a href="volunteer.html">Become a Volunteer</a> 
-        <a href="acceptor.html">Register</a>
-        
-        <a href="about.html">About Us</a>
-      </nav>
+
+  <div class="container">
+    <h1>Welcome to FeedConnect</h1>
+    <p>Join us in connecting food donors with orphanages and old age homes in need.</p>
+
+    <div class="buttons">
+      <a href="donor.html" class="btn donor">Donate Food</a>
+      <a href="acceptor.html" class="btn acceptor">Register as Orphanage / Old Age Home</a>
     </div>
-  </header>
-  <main>
-    <section class="intro">
-      <h2>Why FeedConnect?</h2>
-      <p>Every day, tons of food go to waste while many go hungry. FeedConnect aims to bridge this gap by linking food donors with NGOs and volunteers who can distribute surplus food.</p>
-    </section>
-    <section class="features">
-      <div class="feature">
-        <img src="https://media.istockphoto.com/id/1492759962/photo/concept-of-giving-free-food-to-the-poor-in-the-community-volunteers-handing-out-food-to.jpg?s=612x612&w=0&k=20&c=qYX37R38Ynj4fiQLAZImX0XgTCJCI-Tsy2-Qzi2FQ5g=" alt="Hands giving food">
-        <h3>Donate Surplus Food</h3>
-        <p>Restaurants and individuals can post food availability in real-time.</p>
-      </div>
-      <div class="feature">
-        <img src="https://media.istockphoto.com/id/872576234/photo/rescue.jpg?s=612x612&w=0&k=20&c=53Sskdnw4l3O_Wvx6sIcvveWwSxBxT1X-kkrZg-W9Cw=" alt="Helping hands">
-        <h3>Volunteer for Pickup</h3>
-        <p>Join as a volunteer to collect and distribute food to those in need.</p>
-      </div>
-      <div class="feature">
-        <img src="https://media.istockphoto.com/id/941788480/photo/portrait-of-girl-kid-having-mid-day-meal-in-indian-school.jpg?s=612x612&w=0&k=20&c=tdMRbWtA9rtYSE_6EpXpSl5E4d4xdvqK7egdYd_Q_MM=" alt="Happy child eating">
-        <h3>Make an Impact</h3>
-        <p>Your small action can feed someone in need and reduce food waste.</p>
-      </div>
-    </section>
-  </main>
-  <footer>
-    <p>© 2025 FeedConnect | Contact: info@feedconnect.org</p>
-  </footer>
+  </div>
+
 </body>
 </html>
