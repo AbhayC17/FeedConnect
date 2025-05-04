@@ -1,85 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Acceptor Registration - FeedConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Register Organization - FeedConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background: #f7f7f7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #e1bee7);
+      margin: 0;
     }
+
     .container {
+      max-width: 600px;
       background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 400px;
+      margin: 80px auto;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
+
     h2 {
       text-align: center;
-      margin-bottom: 20px;
+      color: #4a148c;
+      margin-bottom: 30px;
     }
-    input {
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, textarea {
       width: 100%;
       padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 5px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      border-radius: 10px;
       border: 1px solid #ccc;
     }
+
     button {
-      background-color: #2e7d32;
+      background: linear-gradient(to right, #5c6bc0, #3f51b5);
       color: white;
+      padding: 12px 25px;
       border: none;
-      padding: 10px 20px;
-      width: 100%;
-      border-radius: 5px;
+      border-radius: 25px;
+      font-size: 16px;
       cursor: pointer;
+      display: block;
+      margin: 0 auto;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #3f51b5, #303f9f);
+      transform: scale(1.05);
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <h2>Register Your Organization</h2>
-  <form id="acceptForm">
-    <input type="text" id="name" placeholder="Organization Name" required>
-    <input type="email" id="email" placeholder="Email Address" required>
-    <input type="text" id="phone" placeholder="Contact Number" required>
-    <input type="text" id="location" placeholder="Location" required>
-    <button type="submit">Register</button>
-  </form>
-</div>
+  <div class="container">
+    <h2>Register Organization</h2>
+    <form action="https://forms.gle/YOUR_FORM_LINK_HERE" method="post">
+      <label for="orgName">Organization Name</label>
+      <input type="text" id="orgName" name="orgName" required>
 
-<script>
-  const scriptURL = "https://script.google.com/macros/s/AKfycbytpQuIpGNEWoh5oXY2KlmL1NR2C8wgrOpbb05GNg6keIvqzkuZJySX6e3Qj8UvzFuK/exec"; // Replace this with your deployed Apps Script Web App URL
+      <label for="location">Location</label>
+      <input type="text" id="location" name="location" required>
 
-  document.getElementById("acceptForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+      <label for="needs">Food Needs</label>
+      <textarea id="needs" name="needs" rows="3" required></textarea>
 
-    fetch(scriptURL, {
-      method: "POST",
-      body: JSON.stringify({
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        phone: document.getElementById("phone").value,
-        location: document.getElementById("location").value
-      })
-    })
-    .then(response => {
-      alert("Registration successful!");
-      document.getElementById("acceptForm").reset();
-    })
-    .catch(error => {
-      alert("Error registering. Try again.");
-      console.error("Error:", error);
-    });
-  });
-</script>
+      <label for="contact">Contact Info</label>
+      <input type="text" id="contact" name="contact" required>
+
+      <button type="submit">Register</button>
+    </form>
+  </div>
 
 </body>
 </html>
