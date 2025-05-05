@@ -58,13 +58,20 @@
       background: linear-gradient(to right, #43a047, #2e7d32);
       transform: scale(1.05);
     }
+
+    .success-message {
+      text-align: center;
+      color: green;
+      font-weight: bold;
+      margin-top: 15px;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
     <h2>Donate Food</h2>
-    <form action="https://forms.gle/YOUR_FORM_LINK_HERE" method="post">
+    <form id="donorForm" action="https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbwS2awSdxcn9cF0xnDgu88miE8ZMqz1FalLZ-cB2BYhlo-FI0RjOE_7xr6_2bm9kqcJ/exec/exec" method="POST" onsubmit="submitForm(event)">
       <label for="name">Your Name</label>
       <input type="text" id="name" name="name" required>
 
@@ -74,20 +81,43 @@
       <label for="quantity">Quantity (approx)</label>
       <input type="text" id="quantity" name="quantity" required>
 
-      <label for="org">Choose an Orphanage/Old Age Home</label>
-      <select id="org" name="organization">
-        <option value="">-- Select Organization --</option>
+      <label for="organization">Choose Orphanage / Old Age Home</label>
+      <select id="organization" name="organization" required>
+        <option value="">-- Select --</option>
         <option value="Happy Home Orphanage">Happy Home Orphanage</option>
         <option value="Silver Age Shelter">Silver Age Shelter</option>
-        <!-- Dynamically add more -->
+        <!-- Add dynamic options here -->
       </select>
 
       <label for="contact">Your Contact</label>
       <input type="text" id="contact" name="contact" required>
 
       <button type="submit">Submit Donation</button>
+      <div id="success" class="success-message"></div>
     </form>
   </div>
+
+  <script>
+    function submitForm(e) {
+      e.preventDefault();
+      const form = document.getElementById('donorForm');
+      const formData = new FormData(form);
+
+      fetch(form.action, {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("success").textContent = "Thank you! Your donation has been recorded.";
+        form.reset();
+      })
+      .catch(error => {
+        alert("An error occurred. Please try again.");
+        console.error("Error:", error);
+      });
+    }
+  </script>
 
 </body>
 </html>
