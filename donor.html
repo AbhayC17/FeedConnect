@@ -84,8 +84,8 @@
       <input type="text" id="location" required>
 
       <label for="recipient">Select Orphanage / Old Age Home</label>
-      <select id="recipient" required>
-  <option>Loading...</option>
+     <select id="acceptorDropdown">
+  <option>Loading acceptors...</option>
 </select>
 
 
@@ -93,19 +93,23 @@
     </form>
 
  <script>
-  const donorURL = "https://script.google.com/macros/s/AKfycbwS2awSdxcn9cF0xnDgu88miE8ZMqz1FalLZ-cB2BYhlo-FI0RjOE_7xr6_2bm9kqcJ/exec"; // same as above
+  const acceptorDataURL = "https://script.google.com/macros/s/AKfycbwS2awSdxcn9cF0xnDgu88miE8ZMqz1FalLZ-cB2BYhlo-FI0RjOE_7xr6_2bm9kqcJ/exec"; // Replace with your actual script URL
 
-  fetch(donorURL)
+  fetch(acceptorDataURL)
     .then(res => res.json())
     .then(data => {
-      const select = document.getElementById("recipient");
-      select.innerHTML = '<option value="">-- Select an Organization --</option>';
+      const dropdown = document.getElementById("acceptorDropdown");
+      dropdown.innerHTML = '<option value="">-- Select an Accepting Organization --</option>';
       data.forEach(name => {
-        const opt = document.createElement("option");
-        opt.value = name;
-        opt.textContent = name;
-        select.appendChild(opt);
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        dropdown.appendChild(option);
       });
+    })
+    .catch(error => {
+      console.error("Error fetching acceptors:", error);
+      document.getElementById("acceptorDropdown").innerHTML = '<option>Error loading data</option>';
     });
 </script>
 
