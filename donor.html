@@ -75,11 +75,8 @@
       <input type="text" id="quantity" name="quantity" required>
 
       <label for="org">Choose an Orphanage/Old Age Home</label>
-      <select id="org" name="organization">
-        <option value="">-- Select Organization --</option>
-        <option value="Happy Home Orphanage">Happy Home Orphanage</option>
-        <option value="Silver Age Shelter">Silver Age Shelter</option>
-        <!-- Dynamically add more -->
+      <select id="acceptorDropdown">
+        <option>Loading Acceptors...</option>
       </select>
 
       <label for="contact">Your Contact</label>
@@ -88,6 +85,27 @@
       <button type="submit">Submit Donation</button>
     </form>
   </div>
+  <script>
+  const acceptorDataURL = "https://script.google.com/macros/s/AKfycbwS2awSdxcn9cF0xnDgu88miE8ZMqz1FalLZ-cB2BYhlo-FI0RjOE_7xr6_2bm9kqcJ/exec"; // Replace with your actual script URL
+
+  fetch(acceptorDataURL)
+    .then(res => res.json())
+    .then(data => {
+      const dropdown = document.getElementById("acceptorDropdown");
+      dropdown.innerHTML = '<option value="">-- Select an Accepting Organization --</option>';
+      data.forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        dropdown.appendChild(option);
+      });
+    })
+    .catch(error => {
+      console.error("Error fetching acceptors:", error);
+      document.getElementById("acceptorDropdown").innerHTML = '<option>Error loading data</option>';
+    });
+</script>
+
 
 </body>
 </html>
