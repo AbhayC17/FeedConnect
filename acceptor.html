@@ -2,131 +2,85 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Register Organization - FeedConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>Acceptor Registration - FeedConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
   <style>
     body {
-      margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #f9f9f9, #e6f2ff);
-      color: #333;
+      background: #f7f7f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-
-    header {
-      background-color: #0077cc;
-      color: white;
-      padding: 20px 40px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-
     .container {
-      max-width: 600px;
-      margin: 40px auto;
       background: white;
       padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 400px;
     }
-
     h2 {
       text-align: center;
-      color: #0077cc;
       margin-bottom: 20px;
     }
-
-    input, button {
+    input {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-      box-sizing: border-box;
     }
-
     button {
-      background-color: #0077cc;
+      background-color: #2e7d32;
       color: white;
-      font-weight: bold;
       border: none;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #005fa3;
-    }
-
-    #message {
-      text-align: center;
-      margin-top: 15px;
-      font-weight: bold;
-      color: green;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      background-color: #f1f1f1;
-      margin-top: 40px;
-      font-size: 14px;
+      padding: 10px 20px;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>FeedConnect - Register Organization</h1>
-  </header>
+<div class="container">
+  <h2>Register Your Organization</h2>
+  <form id="acceptForm">
+    <input type="text" id="name" placeholder="Organization Name" required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    <input type="text" id="phone" placeholder="Contact Number" required>
+    <input type="text" id="location" placeholder="Location" required>
+    <button type="submit">Register</button>
+  </form>
+</div>
 
-  <div class="container">
-    <h2>Organization Registration</h2>
-    <form id="acceptorForm" onsubmit="submitForm(event)">
-      <input type="hidden" name="formType" value="acceptor">
-      <input type="text" name="orgName" placeholder="Organization Name" required>
-      <input type="text" name="location" placeholder="Location" required>
-      <input type="text" name="contact" placeholder="Contact Info" required>
-      <button type="submit">Register</button>
-      <div id="message"></div>
-    </form>
-  </div>
+<script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycbwS2awSdxcn9cF0xnDgu88miE8ZMqz1FalLZ-cB2BYhlo-FI0RjOE_7xr6_2bm9kqcJ/exec"; // Replace this with your deployed Apps Script Web App URL
 
-  <footer>
-    &copy; 2025 FeedConnect. Empowering communities through food sharing.
-  </footer>
+  document.getElementById("acceptForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-  <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwS2awSdxcn9cF0xnDgu88miE8ZMqz1FalLZ-cB2BYhlo-FI0RjOE_7xr6_2bm9kqcJ/exec"; // Replace with your actual script URL
-
-    function submitForm(event) {
-      event.preventDefault();
-      const form = document.getElementById('acceptorForm');
-      const formData = new FormData(form);
-      const message = document.getElementById('message');
-
-      fetch(scriptURL, { method: 'POST', body: formData })
-        .then(response => response.text())
-        .then(responseText => {
-          if (responseText === "Success") {
-            message.textContent = "Registration successful!";
-            form.reset();
-          } else {
-            message.textContent = "Error occurred. Please try again.";
-            message.style.color = "red";
-          }
-        })
-        .catch(error => {
-          console.error('Error!', error.message);
-          message.textContent = "Something went wrong.";
-          message.style.color = "red";
-        });
-    }
-  </script>
+    fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify({
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        location: document.getElementById("location").value
+      })
+    })
+    .then(response => {
+      alert("Registration successful!");
+      document.getElementById("acceptForm").reset();
+    })
+    .catch(error => {
+      alert("Error registering. Try again.");
+      console.error("Error:", error);
+    });
+  });
+</script>
 
 </body>
 </html>
+
