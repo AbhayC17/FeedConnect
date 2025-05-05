@@ -1,108 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Register as Acceptor - FeedConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <title>Register Organization</title>
   <style>
     body {
-      font-family: 'Montserrat', sans-serif;
-      background: linear-gradient(135deg, #fce4ec, #f3e5f5);
-      margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f7fa;
+      padding: 50px;
+      display: flex;
+      justify-content: center;
     }
-
-    .container {
-      max-width: 600px;
-      margin: 80px auto;
-      background: white;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    .form-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
     }
-
     h2 {
       text-align: center;
-      color: #6a1b9a;
-      margin-bottom: 30px;
-    }
-
-    label {
-      font-weight: bold;
-      margin-top: 15px;
-      display: block;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
       margin-bottom: 20px;
-      border-radius: 10px;
+      color: #2c3e50;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
       border: 1px solid #ccc;
-    }
-
-    button {
-      background: linear-gradient(to right, #ab47bc, #8e24aa);
-      color: white;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 25px;
+      border-radius: 6px;
       font-size: 16px;
-      cursor: pointer;
-      margin: 0 auto;
-      display: block;
     }
-
-    .success-message {
+    button {
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #219150;
+    }
+    #message {
+      margin-top: 10px;
       text-align: center;
-      color: green;
       font-weight: bold;
-      margin-top: 15px;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <div class="form-container">
     <h2>Register Your Organization</h2>
-    <form id="acceptorForm" action="https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbwS2awSdxcn9cF0xnDgu88miE8ZMqz1FalLZ-cB2BYhlo-FI0RjOE_7xr6_2bm9kqcJ/exec/exec" method="POST" onsubmit="submitForm(event)">
-      <label for="orgName">Organization Name</label>
-      <input type="text" name="orgName" id="orgName" required>
-
-      <label for="address">Address</label>
-      <textarea name="address" id="address" required></textarea>
-
-      <label for="type">Type</label>
-      <input type="text" name="type" id="type" placeholder="Orphanage / Old Age Home" required>
-
-      <label for="contact">Contact Info</label>
-      <input type="text" name="contact" id="contact" required>
-
+    <form id="acceptorForm" onsubmit="submitForm(event)">
+      <input type="hidden" name="formType" value="acceptor">
+      <input type="text" name="orgName" placeholder="Organization Name" required>
+      <input type="text" name="location" placeholder="Location" required>
+      <input type="text" name="contact" placeholder="Contact Info" required>
       <button type="submit">Register</button>
-      <div id="success" class="success-message"></div>
+      <div id="message"></div>
     </form>
   </div>
 
   <script>
-    function submitForm(e) {
-      e.preventDefault();
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwS2awSdxcn9cF0xnDgu88miE8ZMqz1FalLZ-cB2BYhlo-FI0RjOE_7xr6_2bm9kqcJ/exec"; // Paste your Google Apps Script Web App URL here
+
+    function submitForm(event) {
+      event.preventDefault();
       const form = document.getElementById('acceptorForm');
+      const messageDiv = document.getElementById('message');
       const formData = new FormData(form);
 
-      fetch(form.action, {
-        method: "POST",
-        body: formData
-      })
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("success").textContent = "Registration successful!";
-        form.reset();
-      })
-      .catch(error => {
-        alert("An error occurred. Please try again.");
-        console.error(error);
-      });
+      fetch(scriptURL, { method: 'POST', body: formData })
+        .then(response => response.text())
+        .then(responseText => {
+          if (responseText === "Success") {
+            messageDiv.textContent = "Registration successful!";
+            form.reset();
+          } else {
+            messageDiv.textContent = "Error occurred. Please try again.";
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          messageDiv.textContent = "Something went wrong.";
+        });
     }
   </script>
 
