@@ -1,109 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Organization Dashboard | FeedConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FeedConnect - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f4f4f4;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #e1bee7);
+      color: #333;
+      line-height: 1.6;
     }
 
     header {
-      background-color: #2e7d32;
+      background: #4a148c;
       color: white;
-      padding: 20px;
+      padding: 30px 0;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      margin-bottom: 10px;
+      font-size: 2.8em;
+    }
+
+    nav {
+      margin-top: 20px;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #ffeb3b;
+    }
+
+    section {
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 0 20px;
       text-align: center;
     }
 
-    .dashboard-container {
-      max-width: 900px;
-      margin: 30px auto;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 30px;
+    .hero p {
+      font-size: 1.2em;
+      margin-bottom: 40px;
     }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 30px;
-      font-weight: 600;
-    }
-
-    .card {
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .card h3 {
-      margin-top: 0;
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
     }
 
     .btn {
-      display: inline-block;
-      padding: 10px 18px;
-      background-color: #2e7d32;
-      color: white;
-      border: none;
-      border-radius: 5px;
       text-decoration: none;
+      padding: 15px 30px;
+      border-radius: 30px;
+      font-size: 1em;
+      font-weight: bold;
+      transition: 0.3s ease;
       cursor: pointer;
+      border: none;
     }
 
-    .btn:hover {
-      background-color: #256528;
+    .btn.donor {
+      background: linear-gradient(to right, #66bb6a, #43a047);
+      color: white;
+    }
+
+    .btn.donor:hover {
+      background: linear-gradient(to right, #43a047, #2e7d32);
+      transform: scale(1.05);
+    }
+
+    .btn.acceptor {
+      background: linear-gradient(to right, #5c6bc0, #3f51b5);
+      color: white;
+    }
+
+    .btn.acceptor:hover {
+      background: linear-gradient(to right, #3f51b5, #303f9f);
+      transform: scale(1.05);
+    }
+
+    .btn.volunteer {
+      background: linear-gradient(to right, #ff7043, #f4511e);
+      color: white;
+    }
+
+    .btn.volunteer:hover {
+      background: linear-gradient(to right, #e64a19, #bf360c);
+      transform: scale(1.05);
+    }
+
+    .section-title {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #4a148c;
     }
 
     footer {
+      background: #4a148c;
+      color: white;
       text-align: center;
       padding: 20px;
       margin-top: 50px;
-      background-color: #eee;
-      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 2em;
+      }
+
+      .btn {
+        width: 100%;
+        margin: 10px 0;
+      }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>FeedConnect - Organization Dashboard</h1>
+    <h1>FeedConnect</h1>
+    <p>Bridging Hunger with Hope</p>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#donate">Donate</a>
+      <a href="#register">Register Org</a>
+      <a href="#volunteer">Volunteer</a>
+    </nav>
   </header>
 
-  <div class="dashboard-container">
-    <h2>Welcome, [Organization Name]</h2>
-
-    <div class="card">
-      <h3>View Available Donations</h3>
-      <p>Check surplus food donation offers from local individuals and businesses.</p>
-      <a href="#" class="btn">View Donations</a>
+  <section class="hero">
+    <p>Welcome to FeedConnect – A platform that connects food donors with orphanages and old-age homes in need. Make a difference with your surplus food today!</p>
+    <div class="buttons">
+      <a href="donor.html" class="btn donor">Donate Food</a>
+      <a href="acceptor.html" class="btn acceptor">Register Organization</a>
+      <a href="volunteer.html" class="btn volunteer">Become a Volunteer</a>
     </div>
+  </section>
 
-    <div class="card">
-      <h3>Request Food</h3>
-      <p>If you're running low, you can submit a food request for your facility.</p>
-      <a href="#" class="btn">Request Food</a>
-    </div>
+  <section id="about">
+    <h2 class="section-title">About Us</h2>
+    <p>
+      FeedConnect was built with one mission — to reduce food wastage and combat hunger. We provide a seamless way for food donors to reach verified organizations in real-time. Whether you're a restaurant, household, or event organizer, your extra food can feed those who need it most.
+    </p>
+  </section>
 
-    <div class="card">
-      <h3>Volunteer Help</h3>
-      <p>View available volunteers who can assist with pickup or delivery.</p>
-      <a href="#" class="btn">View Volunteers</a>
-    </div>
-
-    <div style="text-align: center; margin-top: 30px;">
-      <a href="index.html" class="btn" style="background-color: #c62828;">Logout</a>
-    </div>
-  </div>
+  <section id="volunteer">
+    <h2 class="section-title">Volunteer</h2>
+    <p>
+      Volunteers are the lifeline of FeedConnect. Help us pick up food from donors and deliver it to registered NGOs and shelters. You can register your interest by clicking the button below:
+    </p>
+    <a href="volunteer.html" class="btn volunteer">Join as Volunteer</a>
+  </section>
 
   <footer>
-    &copy; 2025 FeedConnect | All rights reserved.
+    <p>&copy; 2025 FeedConnect | Made with heart for a better world</p>
   </footer>
 
 </body>
 </html>
+
