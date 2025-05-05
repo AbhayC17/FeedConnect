@@ -2,19 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Register Organization - FeedConnect</title>
+  <title>Register as Acceptor - FeedConnect</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Montserrat', sans-serif;
-      background: linear-gradient(135deg, #e0f7fa, #e1bee7);
+      background: linear-gradient(135deg, #fce4ec, #f3e5f5);
       margin: 0;
+      padding: 0;
     }
 
     .container {
       max-width: 600px;
-      background: white;
       margin: 80px auto;
+      background: white;
       padding: 40px;
       border-radius: 15px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
@@ -22,64 +23,88 @@
 
     h2 {
       text-align: center;
-      color: #4a148c;
+      color: #6a1b9a;
       margin-bottom: 30px;
     }
 
     label {
-      display: block;
-      margin-top: 15px;
       font-weight: bold;
+      margin-top: 15px;
+      display: block;
     }
 
     input, textarea {
       width: 100%;
       padding: 10px;
-      margin-top: 5px;
+      margin-top: 8px;
       margin-bottom: 20px;
       border-radius: 10px;
       border: 1px solid #ccc;
     }
 
     button {
-      background: linear-gradient(to right, #5c6bc0, #3f51b5);
+      background: linear-gradient(to right, #ab47bc, #8e24aa);
       color: white;
       padding: 12px 25px;
       border: none;
       border-radius: 25px;
       font-size: 16px;
       cursor: pointer;
-      display: block;
       margin: 0 auto;
-      transition: 0.3s ease;
+      display: block;
     }
 
-    button:hover {
-      background: linear-gradient(to right, #3f51b5, #303f9f);
-      transform: scale(1.05);
+    .success-message {
+      text-align: center;
+      color: green;
+      font-weight: bold;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h2>Register Organization</h2>
-    <form action="https://forms.gle/YOUR_FORM_LINK_HERE" method="post">
+    <h2>Register Your Organization</h2>
+    <form id="acceptorForm" action="https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbwS2awSdxcn9cF0xnDgu88miE8ZMqz1FalLZ-cB2BYhlo-FI0RjOE_7xr6_2bm9kqcJ/exec/exec" method="POST" onsubmit="submitForm(event)">
       <label for="orgName">Organization Name</label>
-      <input type="text" id="orgName" name="orgName" required>
+      <input type="text" name="orgName" id="orgName" required>
 
-      <label for="location">Location</label>
-      <input type="text" id="location" name="location" required>
+      <label for="address">Address</label>
+      <textarea name="address" id="address" required></textarea>
 
-      <label for="needs">Food Needs</label>
-      <textarea id="needs" name="needs" rows="3" required></textarea>
+      <label for="type">Type</label>
+      <input type="text" name="type" id="type" placeholder="Orphanage / Old Age Home" required>
 
       <label for="contact">Contact Info</label>
-      <input type="text" id="contact" name="contact" required>
+      <input type="text" name="contact" id="contact" required>
 
       <button type="submit">Register</button>
+      <div id="success" class="success-message"></div>
     </form>
   </div>
+
+  <script>
+    function submitForm(e) {
+      e.preventDefault();
+      const form = document.getElementById('acceptorForm');
+      const formData = new FormData(form);
+
+      fetch(form.action, {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("success").textContent = "Registration successful!";
+        form.reset();
+      })
+      .catch(error => {
+        alert("An error occurred. Please try again.");
+        console.error(error);
+      });
+    }
+  </script>
 
 </body>
 </html>
