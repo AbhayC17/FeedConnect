@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Donate Food - FeedConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <title>Volunteer with Us - FeedConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #4a148c, #7e57c2); /* Updated background */
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #4a148c, #7e57c2);
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -17,97 +17,81 @@
     }
 
     .container {
-      background: #ffffff;
+      max-width: 600px;
+      background: white;
       padding: 40px;
-      width: 450px;
       border-radius: 20px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     }
 
     h2 {
       text-align: center;
-      color: #2e2e2e;
+      color: #2e7d32;
       margin-bottom: 30px;
     }
 
     label {
-      font-weight: 600;
+      font-weight: bold;
       margin-top: 15px;
       display: block;
-      color: #444;
     }
 
-    input, textarea, select {
+    input, textarea {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       margin-top: 8px;
       margin-bottom: 20px;
       border-radius: 10px;
       border: 1px solid #ccc;
       font-size: 15px;
-      transition: border 0.3s ease;
-    }
-
-    input:focus, textarea:focus, select:focus {
-      border-color: #7cb342;
-      outline: none;
     }
 
     button {
-      background: linear-gradient(to right, #66bb6a, #43a047);
+      background: linear-gradient(to right, #66bb6a, #388e3c);
       color: white;
-      padding: 14px;
+      padding: 12px 25px;
       border: none;
-      border-radius: 30px;
+      border-radius: 25px;
       font-size: 16px;
       cursor: pointer;
-      width: 100%;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background: linear-gradient(to right, #43a047, #2e7d32);
+      margin: 0 auto;
+      display: block;
     }
 
     .success-message {
       text-align: center;
-      color: #2e7d32;
+      color: green;
       font-weight: bold;
-      margin-top: 20px;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h2>Donate Food</h2>
-    <form id="donationForm" action="YOUR_GOOGLE_SCRIPT_URL" method="POST" onsubmit="submitDonation(event)">
-      <label for="donorName">Your Name</label>
-      <input type="text" id="donorName" name="donorName" required>
+    <h2>Volunteer Registration</h2>
+    <form id="volunteerForm" action="https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbwS2awSdxcn9cF0xnDgu88miE8ZMqz1FalLZ-cB2BYhlo-FI0RjOE_7xr6_2bm9kqcJ/exec/exec" method="POST" onsubmit="submitForm(event)">
+      <label for="volName">Full Name</label>
+      <input type="text" name="volName" id="volName" required>
 
-      <label for="foodDesc">Food Description</label>
-      <textarea id="foodDesc" name="foodDesc" rows="3" required></textarea>
+      <label for="volContact">Contact Number</label>
+      <input type="text" name="volContact" id="volContact" required>
 
-      <label for="location">Your Location</label>
-      <input type="text" id="location" name="location" required>
+      <label for="area">Preferred Area / City</label>
+      <input type="text" name="area" id="area" required>
 
-      <label for="organization">Select Orphanage / Old Age Home</label>
-      <select id="organization" name="organization" required>
-        <option value="">-- Select an Accepting Organization --</option>
-        <option value="Orphanage A">Orphanage A</option>
-        <option value="Old Age Home B">Old Age Home B</option>
-        <!-- Add more as needed -->
-      </select>
+      <label for="availability">Availability</label>
+      <textarea name="availability" id="availability" required></textarea>
 
-      <button type="submit">Submit Donation</button>
+      <button type="submit">Join as Volunteer</button>
       <div id="success" class="success-message"></div>
     </form>
   </div>
 
   <script>
-    function submitDonation(e) {
+    function submitForm(e) {
       e.preventDefault();
-      const form = document.getElementById('donationForm');
+      const form = document.getElementById('volunteerForm');
       const formData = new FormData(form);
 
       fetch(form.action, {
@@ -116,15 +100,16 @@
       })
       .then(res => res.text())
       .then(data => {
-        document.getElementById("success").textContent = "Thank you for your donation!";
+        document.getElementById("success").textContent = "Thank you for signing up!";
         form.reset();
       })
       .catch(error => {
-        alert("There was an error submitting the form. Please try again.");
-        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+        console.error(error);
       });
     }
   </script>
 
 </body>
 </html>
+
