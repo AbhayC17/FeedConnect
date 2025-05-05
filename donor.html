@@ -7,40 +7,70 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: #f2f2f2;
+      background: linear-gradient(to right, #e8f5e9, #c8e6c9);
       margin: 0;
       padding: 20px;
     }
+
     .container {
       max-width: 700px;
       margin: auto;
       background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
     }
+
+    .container:hover {
+      transform: translateY(-3px);
+    }
+
     h2 {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      color: #2e7d32;
     }
+
     label {
       font-weight: 500;
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
     }
+
     input, select, textarea {
       width: 100%;
-      padding: 10px;
-      margin: 10px 0 20px;
-      border-radius: 5px;
+      padding: 12px;
+      margin: 10px 0 25px;
+      border-radius: 8px;
       border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
     }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #66bb6a;
+      outline: none;
+    }
+
     button {
       background-color: #2e7d32;
       color: white;
       border: none;
-      padding: 12px 20px;
-      border-radius: 5px;
+      padding: 14px 22px;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      transition: background-color 0.3s ease;
     }
+
+    button:hover {
+      background-color: #1b5e20;
+    }
+
     #chatBox {
       display: none;
       border: 1px solid #ddd;
@@ -51,6 +81,7 @@
       max-height: 300px;
       overflow-y: auto;
     }
+
     #messages {
       height: 150px;
       overflow-y: auto;
@@ -60,11 +91,21 @@
       border-radius: 5px;
       background: white;
     }
+
     #chatInput {
       display: flex;
+      gap: 10px;
     }
+
     #chatInput input {
       flex: 1;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    select option:first-child {
+      color: gray;
     }
   </style>
 </head>
@@ -84,39 +125,34 @@
       <input type="text" id="location" required>
 
       <label for="recipient">Select Orphanage / Old Age Home</label>
-     <select id="acceptorDropdown">
-  <option>Loading acceptors...</option>
-</select>
-
+      <select id="acceptorDropdown">
+        <option>Loading acceptors...</option>
+      </select>
 
       <button type="submit">Submit Donation</button>
     </form>
+  </div>
 
- <script>
-  const acceptorDataURL = "https://script.google.com/macros/s/AKfycby_aOUSlg6neOHpMdLDOFQkD_5H6U8CNzK9yVBtI9bsy3ca4TJ9D4PhvjUf6Jf5BIMF6Q/exec"; // Replace with your actual script URL
+  <script>
+    const acceptorDataURL = "https://script.google.com/macros/s/AKfycby_aOUSlg6neOHpMdLDOFQkD_5H6U8CNzK9yVBtI9bsy3ca4TJ9D4PhvjUf6Jf5BIMF6Q/exec";
 
-  fetch(acceptorDataURL)
-    .then(res => res.json())
-    .then(data => {
-      const dropdown = document.getElementById("acceptorDropdown");
-      dropdown.innerHTML = '<option value="">-- Select an Accepting Organization --</option>';
-      data.forEach(name => {
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
-        dropdown.appendChild(option);
+    fetch(acceptorDataURL)
+      .then(res => res.json())
+      .then(data => {
+        const dropdown = document.getElementById("acceptorDropdown");
+        dropdown.innerHTML = '<option value="">-- Select an Accepting Organization --</option>';
+        data.forEach(name => {
+          const option = document.createElement("option");
+          option.value = name;
+          option.textContent = name;
+          dropdown.appendChild(option);
+        });
+      })
+      .catch(error => {
+        console.error("Error fetching acceptors:", error);
+        document.getElementById("acceptorDropdown").innerHTML = '<option>Error loading data</option>';
       });
-    })
-    .catch(error => {
-      console.error("Error fetching acceptors:", error);
-      document.getElementById("acceptorDropdown").innerHTML = '<option>Error loading data</option>';
-    });
-</script>
-
-
-</body>
-</html>
-
+  </script>
 
 </body>
 </html>
