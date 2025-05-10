@@ -58,7 +58,18 @@
 
     .hero p {
       font-size: 1.2em;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
+    }
+
+    .hero-image,
+    .about-image {
+      width: 90%;
+      max-width: 600px;
+      height: auto;
+      margin: 20px auto;
+      display: block;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
 
     .buttons {
@@ -150,6 +161,10 @@
 
   <section class="hero">
     <p>Welcome to FeedConnect – A platform that connects food donors with orphanages and old-age homes in need. Make a difference with your surplus food today!</p>
+
+    <!-- Optional Image in Hero Section -->
+    <img src="your-image-url-1.jpg" alt="Food donation banner" class="hero-image">
+
     <div class="buttons">
       <a href="donor.html" class="btn donor">Donate Food</a>
       <a href="acceptor.html" class="btn acceptor">Register Organization</a>
@@ -162,6 +177,9 @@
     <p>
       FeedConnect was built with one mission — to reduce food wastage and combat hunger. We provide a seamless way for food donors to reach verified organizations in real-time. Whether you're a restaurant, household, or event organizer, your extra food can feed those who need it most.
     </p>
+
+    <!-- Optional Image in About Section -->
+    <img src="your-image-url-2.jpg" alt="About FeedConnect" class="about-image">
   </section>
 
   <section id="volunteer">
@@ -178,4 +196,3 @@
 
 </body>
 </html>
-
