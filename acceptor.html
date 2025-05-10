@@ -31,14 +31,13 @@
       font-size: 24px;
     }
 
-    input {
+    input, button {
       width: 100%;
       padding: 14px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       border-radius: 10px;
       border: 1px solid #ccc;
       font-size: 15px;
-      transition: border-color 0.3s;
     }
 
     input:focus {
@@ -50,9 +49,6 @@
       background: linear-gradient(to right, #43a047, #388e3c);
       color: white;
       border: none;
-      padding: 14px;
-      width: 100%;
-      border-radius: 30px;
       font-size: 16px;
       cursor: pointer;
       transition: background 0.3s;
@@ -60,6 +56,18 @@
 
     button:hover {
       background: linear-gradient(to right, #388e3c, #2e7d32);
+    }
+
+    #otpSection {
+      display: none;
+    }
+
+    .inline-button {
+      width: auto;
+      padding: 10px 16px;
+      margin-left: 10px;
+      border-radius: 8px;
+      font-size: 13px;
     }
   </style>
 </head>
@@ -70,6 +78,12 @@
   <form id="acceptForm">
     <input type="text" id="name" placeholder="Organization Name" required>
     <input type="email" id="email" placeholder="Email Address" required>
+    <button type="button" class="inline-button" onclick="sendOTP()">Send OTP</button>
+
+    <div id="otpSection">
+      <input type="text" id="otpInput" placeholder="Enter OTP" required>
+    </div>
+
     <input type="text" id="phone" placeholder="Contact Number" required>
     <input type="text" id="location" placeholder="Location" required>
     <button type="submit">Register</button>
@@ -78,9 +92,22 @@
 
 <script>
   const scriptURL = "https://script.google.com/macros/s/AKfycby_aOUSlg6neOHpMdLDOFQkD_5H6U8CNzK9yVBtI9bsy3ca4TJ9D4PhvjUf6Jf5BIMF6Q/exec";
+  let generatedOTP = "";
+
+  function sendOTP() {
+    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    alert("Your OTP is: " + generatedOTP); // Replace this with actual email send logic
+    document.getElementById("otpSection").style.display = "block";
+  }
 
   document.getElementById("acceptForm").addEventListener("submit", function(e) {
     e.preventDefault();
+
+    const enteredOTP = document.getElementById("otpInput").value;
+    if (enteredOTP !== generatedOTP) {
+      alert("Invalid OTP. Please try again.");
+      return;
+    }
 
     fetch(scriptURL, {
       method: "POST",
@@ -94,6 +121,8 @@
     .then(response => {
       alert("Registration successful!");
       document.getElementById("acceptForm").reset();
+      document.getElementById("otpSection").style.display = "none";
+      generatedOTP = "";
     })
     .catch(error => {
       alert("Error registering. Try again.");
