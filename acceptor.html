@@ -61,15 +61,25 @@
     #otpSection {
       display: none;
     }
-
-    .inline-button {
-      width: auto;
-      padding: 10px 16px;
-      margin-left: 10px;
-      border-radius: 8px;
-      font-size: 13px;
-    }
   </style>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
+  <script>
+    // Replace this with your actual Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCQAcTe8XvWqyU3Pxh8g6t9iqb7WT_Syqc",
+      authDomain: "feedconnect-d2a2d.firebaseapp.com",
+      projectId: "feedconnect-d2a2d",
+      storageBucket: "feedconnect-d2a2d.appspot.com",
+      messagingSenderId: "897182069270",
+      appId: "1:897182069270:web:9cbc5c74ccbc1f1b5e3b37"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+  </script>
 </head>
 <body>
 
@@ -78,60 +88,65 @@
   <form id="acceptForm">
     <input type="text" id="name" placeholder="Organization Name" required>
     <input type="email" id="email" placeholder="Email Address" required>
-    <button type="button" class="inline-button" onclick="sendOTP()">Send OTP</button>
+    <input type="text" id="phone" placeholder="Contact Number (+91...)" required>
+
+    <div id="recaptcha-container"></div>
+    <button type="button" onclick="sendOTP()">Send OTP</button>
 
     <div id="otpSection">
       <input type="text" id="otpInput" placeholder="Enter OTP" required>
+      <button type="button" onclick="verifyOTP()">Verify OTP</button>
     </div>
 
-    <input type="text" id="phone" placeholder="Contact Number" required>
     <input type="text" id="location" placeholder="Location" required>
     <button type="submit">Register</button>
   </form>
 </div>
 
 <script>
-  const sendOtpURL = "https://script.google.com/macros/s/AKfycbyp5h-bTdtgKim9hxBv3I4H4X_VN2SUaY-awqae-DrIxLM-pNgNj4yOL1dGOpycWQsRzw/exec";
-  const registerURL = "https://script.google.com/macros/s/AKfycby_aOUSlg6neOHpMdLDOFQkD_5H6U8CNzK9yVBtI9bsy3ca4TJ9D4PhvjUf6Jf5BIMF6Q/exec";
-  let generatedOTP = "";
+  const scriptURL = "https://script.google.com/macros/s/AKfycby_aOUSlg6neOHpMdLDOFQkD_5H6U8CNzK9yVBtI9bsy3ca4TJ9D4PhvjUf6Jf5BIMF6Q/exec";
+
+  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+    'size': 'invisible'
+  });
+
+  let confirmationResult;
 
   function sendOTP() {
-    const email = document.getElementById("email").value;
-    if (!email) {
-      alert("Please enter your email address first.");
-      return;
-    }
+    const phoneNumber = document.getElementById("phone").value;
+    const appVerifier = window.recaptchaVerifier;
 
-    fetch(sendOtpURL, {
-      method: "POST",
-      body: JSON.stringify({ email: email })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        generatedOTP = data.otp;
-        alert("OTP has been sent to your email.");
+    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+      .then((result) => {
+        confirmationResult = result;
         document.getElementById("otpSection").style.display = "block";
-      } else {
-        alert("Error sending OTP. Try again.");
-      }
-    })
-    .catch(error => {
-      console.error("Error:", error);
-      alert("Failed to send OTP.");
+        alert("OTP sent to your phone.");
+      })
+      .catch((error) => {
+        alert("Error sending OTP: " + error.message);
+      });
+  }
+
+  function verifyOTP() {
+    const code = document.getElementById("otpInput").value;
+
+    confirmationResult.confirm(code).then((result) => {
+      alert("Phone number verified!");
+      document.getElementById("phone").dataset.verified = "true";
+    }).catch((error) => {
+      alert("Incorrect OTP. Try again.");
     });
   }
 
   document.getElementById("acceptForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const enteredOTP = document.getElementById("otpInput").value;
-    if (enteredOTP !== generatedOTP) {
-      alert("Invalid OTP. Please try again.");
+    if (document.getElementById("phone").dataset.verified !== "true") {
+      alert("Please verify your phone number first.");
       return;
     }
 
-    fetch(registerURL, {
+    fetch(scriptURL, {
       method: "POST",
       body: JSON.stringify({
         name: document.getElementById("name").value,
@@ -144,7 +159,6 @@
       alert("Registration successful!");
       document.getElementById("acceptForm").reset();
       document.getElementById("otpSection").style.display = "none";
-      generatedOTP = "";
     })
     .catch(error => {
       alert("Error registering. Try again.");
@@ -155,6 +169,3 @@
 
 </body>
 </html>
-
-
-
