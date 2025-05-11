@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Organization - FeedConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #512da8;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: 500;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .org-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .org-buttons button {
+      padding: 14px;
+      background-color: #673ab7;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .org-buttons button:hover {
+      background-color: #512da8;
+    }
+
+    .search-box {
+      margin-top: 10px;
+      margin-bottom: 25px;
+    }
+
+    .info {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Select an Organization</h2>
+
+    <label for="donorName">Your Name</label>
+    <input type="text" id="donorName" placeholder="Enter your name" />
+
+    <label for="search">Search Organizations</label>
+    <input type="text" id="search" class="search-box" placeholder="Type to filter organizations...">
+
+    <div class="org-buttons" id="orgContainer">
+      <!-- Buttons will appear here -->
+    </div>
+  </div>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyr87RxLoF08ABfZjrd1mlE9CuYasAVpVVzj9vx9oubuCv86m83Ze2oUpt096N5h6Oy/exec"; // replace with actual
+
+    let allOrgs = [];
+
+    // Load orgs from Google Sheet via Web App
+    fetch(scriptURL)
+      .then(response => response.json())
+      .then(data => {
+        allOrgs = data;
+        renderButtons(data);
+      })
+      .catch(error => {
+        document.getElementById("orgContainer").innerHTML = "<p>Error loading organizations.</p>";
+        console.error("Fetch error:", error);
+      });
+
+    // Render buttons
+    function renderButtons(orgs) {
+      const container = document.getElementById("orgContainer");
+      container.innerHTML = "";
+      orgs.forEach(org => {
+        const btn = document.createElement("button");
+        btn.textContent = `${org.Name} (${org.Type}) - ${org.City}`;
+        btn.onclick = () => handleSelection(org);
+        container.appendChild(btn);
+      });
+    }
+
+    // Filter on search
+    document.getElementById("search").addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      const filtered = allOrgs.filter(org =>
+        (org.Name + org.Type + org.City).toLowerCase().includes(query)
+      );
+      renderButtons(filtered);
+    });
+
+    // Handle button click
+    function handleSelection(org) {
+      const name = document.getElementById("donorName").value.trim();
+      if (!name) {
+        alert("Please enter your name before selecting an organization.");
+        return;
+      }
+
+      // Save to localStorage or send to another page
+      localStorage.setItem("donorName", name);
+      localStorage.setItem("selectedOrg", JSON.stringify(org));
+
+      alert(`Thank you, ${name}. You selected ${org.Name}.`);
+      // Optional: redirect to chat.html or confirmation.html
+      // window.location.href = "chat.html";
+    }
+  </script>
+</body>
+</html>
+
