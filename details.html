@@ -73,12 +73,14 @@
 </div>
 
 <script>
-  const detailScriptURL = "https://script.google.com/macros/s/AKfycbx-ewOXmuxaTyuqgmbegXb8FFMlYxflYaCOhOJNU-ZoJzKhvNpv-50GKWrEG-OXq9KF7A/exec";
+  const detailScriptURL = "https://script.google.com/macros/s/AKfycbzRqdlUNr9F369TzH78LmGmWSI7yizjRu-4Zdj4xFMK8uUWY0f259-rjX6VUMEy9S59Rg/exec"; // Replace with your script URL
 
-  // Auto-fill phone number from URL
+  // Pre-fill phone from URL params if available
   const urlParams = new URLSearchParams(window.location.search);
   const phone = urlParams.get("phone");
-  document.getElementById("phone").value = phone || "";
+  if (phone) {
+    document.getElementById("phone").value = phone;
+  }
 
   document.getElementById("detailForm").addEventListener("submit", function(e) {
     e.preventDefault();
@@ -94,6 +96,10 @@
 
     fetch(detailScriptURL, {
       method: "POST",
+      mode: "no-cors", // Necessary for Google Apps Script
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(data)
     })
     .then(() => {
