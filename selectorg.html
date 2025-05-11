@@ -13,7 +13,7 @@
     }
 
     .container {
-      max-width: 800px;
+      max-width: 700px;
       margin: auto;
       background: white;
       padding: 30px;
@@ -29,43 +29,33 @@
 
     label {
       font-weight: 500;
-      margin-bottom: 6px;
       display: block;
+      margin-top: 15px;
     }
 
-    input[type="text"] {
+    input[type="text"], select {
       width: 100%;
       padding: 12px;
+      margin-top: 8px;
       margin-bottom: 20px;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 8px;
     }
 
-    .org-buttons {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 15px;
-    }
-
-    .org-buttons button {
+    button {
       padding: 14px;
       background-color: #673ab7;
       color: white;
       border: none;
       border-radius: 10px;
-      font-size: 15px;
+      font-size: 16px;
       cursor: pointer;
-      transition: 0.3s;
+      width: 100%;
     }
 
-    .org-buttons button:hover {
+    button:hover {
       background-color: #512da8;
-    }
-
-    .search-box {
-      margin-top: 10px;
-      margin-bottom: 25px;
     }
 
     .info {
@@ -83,69 +73,59 @@
     <label for="donorName">Your Name</label>
     <input type="text" id="donorName" placeholder="Enter your name" />
 
-    <label for="search">Search Organizations</label>
-    <input type="text" id="search" class="search-box" placeholder="Type to filter organizations...">
+    <label for="orgSelect">Choose an Organization</label>
+    <select id="orgSelect">
+      <option disabled selected>Loading organizations...</option>
+    </select>
 
-    <div class="org-buttons" id="orgContainer">
-      <!-- Buttons will appear here -->
-    </div>
+    <button onclick="submitSelection()">Confirm Selection</button>
   </div>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxqKiVnMpumH-JJfkQDcQf_vK0ojrx-O02JcQ_3F-hWGO_m-P9ZDeX8QsBVlAk6dhvg3A/exec"; // replace with actual
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyr87RxLoF08ABfZjrd1mlE9CuYasAVpVVzj9vx9oubuCv86m83Ze2oUpt096N5h6Oy/exec"; // replace with your web app URL
 
     let allOrgs = [];
 
-    // Load orgs from Google Sheet via Web App
+    // Fetch organization data
     fetch(scriptURL)
       .then(response => response.json())
       .then(data => {
         allOrgs = data;
-        renderButtons(data);
+        const select = document.getElementById("orgSelect");
+        select.innerHTML = `<option disabled selected>-- Select an Organization --</option>`;
+        data.forEach((org, index) => {
+          const option = document.createElement("option");
+          option.value = index;  // index to fetch from allOrgs array later
+          option.text = `${org.Name} (${org.Type}) - ${org.City}`;
+          select.appendChild(option);
+        });
       })
       .catch(error => {
-        document.getElementById("orgContainer").innerHTML = "<p>Error loading organizations.</p>";
-        console.error("Fetch error:", error);
+        console.error("Error fetching data:", error);
+        document.getElementById("orgSelect").innerHTML = `<option>Error loading organizations</option>`;
       });
 
-    // Render buttons
-    function renderButtons(orgs) {
-      const container = document.getElementById("orgContainer");
-      container.innerHTML = "";
-      orgs.forEach(org => {
-        const btn = document.createElement("button");
-        btn.textContent = `${org.Name} (${org.Type}) - ${org.City}`;
-        btn.onclick = () => handleSelection(org);
-        container.appendChild(btn);
-      });
-    }
-
-    // Filter on search
-    document.getElementById("search").addEventListener("input", function () {
-      const query = this.value.toLowerCase();
-      const filtered = allOrgs.filter(org =>
-        (org.Name + org.Type + org.City).toLowerCase().includes(query)
-      );
-      renderButtons(filtered);
-    });
-
-    // Handle button click
-    function handleSelection(org) {
+    function submitSelection() {
       const name = document.getElementById("donorName").value.trim();
-      if (!name) {
-        alert("Please enter your name before selecting an organization.");
+      const orgIndex = document.getElementById("orgSelect").value;
+
+      if (!name || orgIndex === "" || orgIndex === "Loading organizations...") {
+        alert("Please enter your name and select an organization.");
         return;
       }
 
-      // Save to localStorage or send to another page
-      localStorage.setItem("donorName", name);
-      localStorage.setItem("selectedOrg", JSON.stringify(org));
+      const selectedOrg = allOrgs[orgIndex];
 
-      alert(`Thank you, ${name}. You selected ${org.Name}.`);
-      // Optional: redirect to chat.html or confirmation.html
+      localStorage.setItem("donorName", name);
+      localStorage.setItem("selectedOrg", JSON.stringify(selectedOrg));
+
+      alert(`Thank you, ${name}. You selected ${selectedOrg.Name}.`);
+      // Optional redirect
       // window.location.href = "chat.html";
     }
   </script>
+
 </body>
 </html>
+
 
