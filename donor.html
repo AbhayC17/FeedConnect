@@ -36,7 +36,7 @@
       margin-bottom: 6px;
     }
 
-    input, select, textarea {
+    input, textarea {
       width: 100%;
       padding: 14px;
       margin: 10px 0 25px;
@@ -46,7 +46,7 @@
       transition: border 0.3s;
     }
 
-    input:focus, select:focus, textarea:focus {
+    input:focus, textarea:focus {
       border-color: #673ab7;
       outline: none;
     }
@@ -66,43 +66,6 @@
     button:hover {
       background: linear-gradient(to right, #388e3c, #2e7d32);
     }
-
-    #chatBox {
-      display: none;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 15px;
-      background-color: #f9f9f9;
-      margin-top: 20px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    #messages {
-      height: 150px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      background: white;
-    }
-
-    #chatInput {
-      display: flex;
-      gap: 10px;
-    }
-
-    #chatInput input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    select option:first-child {
-      color: gray;
-    }
   </style>
 </head>
 <body>
@@ -120,38 +83,53 @@
       <label for="location">Your Location</label>
       <input type="text" id="location" required>
 
-      <label for="recipient">Select Orphanage / Old Age Home</label>
-      <select id="acceptorDropdown">
-        <option>Loading acceptors...</option>
-      </select>
-
-      <button onclick="location.href='chat.html'">Donate Food</button>
-
+      <button type="submit">Donate Food</button>
     </form>
   </div>
 
   <script>
-    const acceptorDataURL = "https://script.google.com/macros/s/AKfycbytpQuIpGNEWoh5oXY2KlmL1NR2C8wgrOpbb05GNg6keIvqzkuZJySX6e3Qj8UvzFuK/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyjRT2FDminIoPUOywe5xlL_4Em0lEr5xDoNR-mvKnJZ90wPsfaMg3Zj0mDGcm0hy5c/exec";
 
-    fetch(acceptorDataURL)
-      .then(res => res.json())
-      .then(data => {
-        const dropdown = document.getElementById("acceptorDropdown");
-        dropdown.innerHTML = '<option value="">-- Select an Accepting Organization --</option>';
-        data.forEach(name => {
-          const option = document.createElement("option");
-          option.value = name;
-          option.textContent = name;
-          dropdown.appendChild(option);
-        });
+    document.getElementById("donorForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("donorName").value.trim();
+      const food = document.getElementById("foodDetails").value.trim();
+      const location = document.getElementById("location").value.trim();
+
+      if (!name || !food || !location) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("food", food);
+      formData.append("location", location);
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.text())
+      .then(result => {
+        if (result.toLowerCase().includes("success")) {
+          const params = new URLSearchParams({ name, food, location });
+          window.location.href = `selectorg.html?${params.toString()}`;
+        } else {
+          alert("Submission failed. Please try again.");
+          console.error("Response:", result);
+        }
       })
       .catch(error => {
-        console.error("Error fetching acceptors:", error);
-        document.getElementById("acceptorDropdown").innerHTML = '<option>Error loading data</option>';
+        alert("An error occurred. Please try again.");
+        console.error("Error:", error);
       });
+    });
   </script>
 
 </body>
 </html>
+
 
 
