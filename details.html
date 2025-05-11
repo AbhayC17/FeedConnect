@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>More Details - FeedConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+      width: 420px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Complete Organization Details</h2>
+  <form id="detailForm">
+    <input type="text" id="phone" placeholder="Contact Number" readonly>
+    <input type="text" id="building" placeholder="Building Number" required>
+    <input type="text" id="locality" placeholder="Locality" required>
+    <input type="text" id="city" placeholder="City" required>
+    <select id="type" required>
+      <option value="">Select Organization Type</option>
+      <option value="NGO">NGO</option>
+      <option value="School">School</option>
+      <option value="Orphanage">Orphanage</option>
+      <option value="Other">Other</option>
+    </select>
+    <input type="number" id="people" placeholder="Number of People" required>
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<script>
+  const detailScriptURL = "YOUR_DETAILS_FORM_SCRIPT_URL";
+
+  // Auto-fill phone number from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const phone = urlParams.get("phone");
+  document.getElementById("phone").value = phone || "";
+
+  document.getElementById("detailForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const data = {
+      phone: document.getElementById("phone").value,
+      building: document.getElementById("building").value,
+      locality: document.getElementById("locality").value,
+      city: document.getElementById("city").value,
+      type: document.getElementById("type").value,
+      people: document.getElementById("people").value
+    };
+
+    fetch(detailScriptURL, {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+    .then(() => {
+      alert("Details submitted successfully!");
+      window.location.href = "thankyou.html"; // Optional
+    })
+    .catch(error => {
+      alert("Submission failed.");
+      console.error("Error:", error);
+    });
+  });
+</script>
+
+</body>
+</html>
