@@ -83,20 +83,53 @@
     .redirect-message a:hover {
       text-decoration: underline;
     }
+
+    /* OTP Modal */
+    #otpModal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+    }
+
+    #otpModalContent {
+      background: white;
+      max-width: 400px;
+      margin: 100px auto;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    #otpModal input {
+      margin-top: 10px;
+      text-align: center;
+      letter-spacing: 4px;
+    }
+
+    #closeModal {
+      margin-top: 10px;
+      color: red;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
   <h1>Donor Registration - FeedConnect</h1>
 
-  <!-- New User Registration -->
   <div class="form-container">
     <h2>New User Registration</h2>
     <form id="newUserForm">
       <label for="newName">Full Name</label>
       <input type="text" id="newName" name="newName" required />
 
-      <label for="propertyName">Name of Property (Restaurant/Event/Home)</label>
+      <label for="propertyName">Name of Property</label>
       <input type="text" id="propertyName" name="propertyName" required />
 
       <label for="newEmail">Email</label>
@@ -114,7 +147,7 @@
       <button type="submit">Register and Verify Email</button>
 
       <div class="support">
-        Need help? Contact our support at <a href="mailto:support@feedconnect.org">support@feedconnect.org</a>
+        Need help? Contact <a href="mailto:support@feedconnect.org">support@feedconnect.org</a>
       </div>
     </form>
 
@@ -123,51 +156,84 @@
     </div>
   </div>
 
-  <script>
-    const scriptURL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec'; // Replace this with your deployed Apps Script URL
+  <!-- OTP Modal -->
+  <div id="otpModal">
+    <div id="otpModalContent">
+      <h3>Enter OTP</h3>
+      <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6"/>
+      <button id="verifyOtpBtn">Verify</button>
+      <div id="closeModal">Cancel</div>
+    </div>
+  </div>
 
-    document.getElementById("newUserForm").addEventListener("submit", async function(e) {
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby-cZLzTdtCE3tn9J4ObcpAC7nOQ_vJ3sDZYg8K9IPcno0fM3M5vJWk8eYK-u6VeAmhjg/exec';
+
+    const form = document.getElementById("newUserForm");
+    const otpModal = document.getElementById("otpModal");
+    const otpInput = document.getElementById("otpInput");
+    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+
+    let currentEmail = '';
+
+    form.addEventListener("submit", async function(e) {
       e.preventDefault();
 
       const name = document.getElementById("newName").value;
       const email = document.getElementById("newEmail").value;
-
-      const payload = {
-        name,
-        email
-      };
+      currentEmail = email;
 
       try {
-        const response = await fetch(scriptURL, {
+        const res = await fetch(scriptURL, {
           method: 'POST',
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ name, email }),
           headers: { 'Content-Type': 'application/json' }
         });
 
-        const result = await response.json();
+        const result = await res.json();
         if (result.success) {
-          const userOTP = prompt("OTP sent to your email. Please enter it to complete verification:");
-
-          const verifyResponse = await fetch(`${scriptURL}?email=${email}&otp=${userOTP}`);
-          const verifyResult = await verifyResponse.json();
-
-          if (verifyResult.verified) {
-            alert("Email verified successfully. Registration complete!");
-            document.getElementById("newUserForm").reset();
-          } else {
-            alert("Invalid OTP. Please try again.");
-          }
+          otpModal.style.display = "block";
         } else {
-          alert("Failed to send OTP. Please try again.");
+          alert("Failed to send OTP. Try again.");
         }
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Something went wrong. Please try again later.");
+      } catch (err) {
+        alert("Error sending OTP.");
+        console.error(err);
       }
     });
+
+    verifyOtpBtn.addEventListener("click", async function() {
+      const otp = otpInput.value.trim();
+
+      if (otp.length !== 6) {
+        alert("Enter a valid 6-digit OTP.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${scriptURL}?email=${currentEmail}&otp=${otp}`);
+        const result = await res.json();
+
+        if (result.verified) {
+          alert("OTP verified. Registration complete!");
+          otpModal.style.display = "none";
+          document.getElementById("newUserForm").reset();
+        } else {
+          alert("Invalid OTP. Try again.");
+        }
+      } catch (err) {
+        alert("Error verifying OTP.");
+        console.error(err);
+      }
+    });
+
+    document.getElementById("closeModal").onclick = () => {
+      otpModal.style.display = "none";
+    };
   </script>
 
 </body>
 </html>
+
 
 
