@@ -77,46 +77,24 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
+      margin-top: 30px;
     }
 
     .btn {
       text-decoration: none;
-      padding: 15px 30px;
+      padding: 15px 25px;
       border-radius: 30px;
-      font-size: 1em;
+      font-size: 0.95em;
       font-weight: bold;
       transition: 0.3s ease;
       cursor: pointer;
       border: none;
-    }
-
-    .btn.donor {
-      background: linear-gradient(to right, #66bb6a, #43a047);
       color: white;
+      background: #7b1fa2;
     }
 
-    .btn.donor:hover {
-      background: linear-gradient(to right, #43a047, #2e7d32);
-      transform: scale(1.05);
-    }
-
-    .btn.acceptor {
-      background: linear-gradient(to right, #5c6bc0, #3f51b5);
-      color: white;
-    }
-
-    .btn.acceptor:hover {
-      background: linear-gradient(to right, #3f51b5, #303f9f);
-      transform: scale(1.05);
-    }
-
-    .btn.volunteer {
-      background: linear-gradient(to right, #ff7043, #f4511e);
-      color: white;
-    }
-
-    .btn.volunteer:hover {
-      background: linear-gradient(to right, #e64a19, #bf360c);
+    .btn:hover {
+      background: #6a1b9a;
       transform: scale(1.05);
     }
 
@@ -154,7 +132,6 @@
     <nav>
       <a href="#about">About</a>
       <a href="#donate">Donate</a>
-      <a href="#register">Register Org</a>
       <a href="#volunteer">Volunteer</a>
     </nav>
   </header>
@@ -162,13 +139,16 @@
   <section class="hero">
     <p>Welcome to FeedConnect – A platform that connects food donors with orphanages and old-age homes in need. Make a difference with your surplus food today!</p>
 
-    <!-- Optional Image in Hero Section -->
     <img src="https://thumbs.dreamstime.com/b/donation-bins-canned-food-drive-surrounded-cheerful-volunteers-cartoon-style-flat-design-illustration-349810359.jpg" alt="Food donation banner" class="hero-image">
 
     <div class="buttons">
-      <a href="donor.html" class="btn donor">Donate Food</a>
-      <a href="acceptor.html" class="btn acceptor">Register Organization</a>
-      <a href="volunteer.html" class="btn volunteer">Become a Volunteer</a>
+      <a href="new-donor.html" class="btn">Donor Registration (New)</a>
+      <a href="existing-donor.html" class="btn">Donor Login (Existing)</a>
+      <a href="new-org.html" class="btn">Org Registration (New)</a>
+      <a href="existing-org.html" class="btn">Org Login (Existing)</a>
+      <a href="individual-donate.html" class="btn">Donate as Individual</a>
+      <a href="volunteer.html" class="btn">Register as Volunteer</a>
+      <a href="#about" class="btn">About Us</a>
     </div>
   </section>
 
@@ -177,8 +157,6 @@
     <p>
       FeedConnect was built with one mission — to reduce food wastage and combat hunger. We provide a seamless way for food donors to reach verified organizations in real-time. Whether you're a restaurant, household, or event organizer, your extra food can feed those who need it most.
     </p>
-
-    <!-- Optional Image in About Section -->
     <img src="https://i.pinimg.com/736x/6a/2a/85/6a2a85bb2fa79c1f4914ce0dd8f2347a.jpg" alt="About FeedConnect" class="about-image">
   </section>
 
@@ -187,7 +165,7 @@
     <p>
       Volunteers are the lifeline of FeedConnect. Help us pick up food from donors and deliver it to registered NGOs and shelters. You can register your interest by clicking the button below:
     </p>
-    <a href="volunteer.html" class="btn volunteer">Join as Volunteer</a>
+    <a href="volunteer.html" class="btn">Join as Volunteer</a>
   </section>
 
   <footer>
