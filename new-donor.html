@@ -123,6 +123,51 @@
     </div>
   </div>
 
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec'; // Replace this with your deployed Apps Script URL
+
+    document.getElementById("newUserForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("newName").value;
+      const email = document.getElementById("newEmail").value;
+
+      const payload = {
+        name,
+        email
+      };
+
+      try {
+        const response = await fetch(scriptURL, {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          const userOTP = prompt("OTP sent to your email. Please enter it to complete verification:");
+
+          const verifyResponse = await fetch(`${scriptURL}?email=${email}&otp=${userOTP}`);
+          const verifyResult = await verifyResponse.json();
+
+          if (verifyResult.verified) {
+            alert("Email verified successfully. Registration complete!");
+            document.getElementById("newUserForm").reset();
+          } else {
+            alert("Invalid OTP. Please try again.");
+          }
+        } else {
+          alert("Failed to send OTP. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Something went wrong. Please try again later.");
+      }
+    });
+  </script>
+
 </body>
 </html>
+
 
