@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>New Acceptor - FeedConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(to right, #fce4ec, #e1f5fe);
+      color: #333;
+      padding: 30px;
+    }
+    .form-container {
+      background: white;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    h2 {
+      text-align: center;
+      color: #6a1b9a;
+      margin-bottom: 25px;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 18px;
+      font-size: 15px;
+    }
+    button {
+      background: #6a1b9a;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1em;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background: #4a148c;
+    }
+    #otpInput {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Register Your Organization</h2>
+    <form id="acceptForm">
+      <input type="text" id="name" placeholder="Organization Name" required>
+      <input type="email" id="email" placeholder="Email Address" required>
+      <button type="button" onclick="sendEmailOTP()">Send OTP</button>
+      <input type="text" id="otpInput" placeholder="Enter OTP" required>
+      <button type="submit">Register</button>
+    </form>
+  </div>
+
+  <script>
+    const otpScriptURL = "YOUR_OTP_SCRIPT_URL";
+    const formScriptURL = "YOUR_FORM_SCRIPT_URL";
+    let generatedOTP = "";
+
+    function sendEmailOTP() {
+      const email = document.getElementById("email").value;
+      if (!email) return alert("Enter email first.");
+      generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+
+      fetch(otpScriptURL, {
+        method: "POST",
+        body: JSON.stringify({ email: email, otp: generatedOTP })
+      })
+      .then(() => {
+        alert("OTP sent to email.");
+        document.getElementById("otpInput").style.display = "block";
+      })
+      .catch(err => alert("Error: " + err));
+    }
+
+    document.getElementById("acceptForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const enteredOTP = document.getElementById("otpInput").value;
+      if (enteredOTP !== generatedOTP) return alert("Invalid OTP");
+
+      fetch(formScriptURL, {
+        method: "POST",
+        body: JSON.stringify({
+          name: document.getElementById("name").value,
+          email: document.getElementById("email").value
+        })
+      })
+      .then(() => window.location.href = "details.html")
+      .catch(err => alert("Error registering: " + err));
+    });
+  </script>
+</body>
+</html>
