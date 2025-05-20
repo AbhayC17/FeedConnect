@@ -2,142 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Acceptor Registration - FeedConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+  <title>FeedConnect - Acceptor</title>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background: 
-        url('https://t3.ftcdn.net/jpg/00/30/67/78/360_F_30677807_nSDFegqRqkQcDV9TcOLvXB1tL4PwgXXJ.jpg') no-repeat center center fixed;
-      background-size: cover;
+      background: linear-gradient(to right, #e3f2fd, #ede7f6);
+      margin: 0;
+      padding: 40px;
+      text-align: center;
+    }
+    h1 {
+      color: #4a148c;
+      margin-bottom: 30px;
+    }
+    .btn-container {
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+      gap: 30px;
     }
-
-    .container {
-      background: #ffffff;
-      padding: 40px 30px;
-      border-radius: 15px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-      width: 420px;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #512da8;
-      font-weight: 600;
-      font-size: 24px;
-    }
-
-    input, button {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      font-size: 15px;
-      border: 1px solid #ccc;
-    }
-
-    input:focus {
-      border-color: #673ab7;
-      outline: none;
-    }
-
-    button {
-      background: linear-gradient(to right, #43a047, #388e3c);
-      color: white;
-      border: none;
+    a button {
+      padding: 14px 30px;
       font-size: 16px;
+      border-radius: 10px;
+      border: none;
       cursor: pointer;
-      transition: background 0.3s;
+      color: white;
+      background: linear-gradient(to right, #6a1b9a, #4a148c);
+      transition: 0.3s;
     }
-
-    button:hover {
-      background: linear-gradient(to right, #388e3c, #2e7d32);
-    }
-
-    #otpInput {
-      display: none;
+    a button:hover {
+      background: linear-gradient(to right, #4a148c, #311b92);
     }
   </style>
 </head>
 <body>
-
-<div class="container">
-  <h2>Register Your Organization</h2>
-  <form id="acceptForm">
-    <input type="text" id="name" placeholder="Organization Name" required>
-    <input type="email" id="email" placeholder="Email Address" required>
-    <button type="button" onclick="sendEmailOTP()">Send OTP</button>
-    <input type="text" id="otpInput" placeholder="Enter OTP" required>
-    <button type="submit">Register</button>
-  </form>
-</div>
-
-<script>
-  const otpScriptURL = "https://script.google.com/macros/s/AKfycbwSSaWMvIXuMryQM0z-hETjiPAowSmFdKqWU4chzxJZU7SWO6QKicPzt19VG2zU0PRC/exec";  // Replace this
-  const formScriptURL = "https://script.google.com/macros/s/AKfycbytpQuIpGNEWoh5oXY2KlmL1NR2C8wgrOpbb05GNg6keIvqzkuZJySX6e3Qj8UvzFuK/exec";  // Replace this
-
-  let generatedOTP = "";
-
-  function sendEmailOTP() {
-    const email = document.getElementById("email").value;
-    if (!email) {
-      alert("Please enter your email before requesting OTP.");
-      return;
-    }
-
-    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-
-    fetch(otpScriptURL, {
-      method: "POST",
-      body: JSON.stringify({
-        email: email,
-        otp: generatedOTP
-      })
-    })
-    .then(res => res.text())
-    .then(data => {
-      alert("OTP sent to email.");
-      document.getElementById("otpInput").style.display = "block";
-    })
-    .catch(err => {
-      alert("Error sending OTP: " + err);
-      console.error(err);
-    });
-  }
-
-  document.getElementById("acceptForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const enteredOTP = document.getElementById("otpInput").value;
-    if (enteredOTP !== generatedOTP) {
-      alert("Invalid OTP. Please try again.");
-      return;
-    }
-
-    // Save basic info before redirect
-    fetch(formScriptURL, {
-      method: "POST",
-      body: JSON.stringify({
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value
-      })
-    })
-    .then(res => {
-      window.location.href = "details.html";
-    })
-    .catch(error => {
-      alert("Error registering. Try again.");
-      console.error("Error:", error);
-    });
-  });
-</script>
-
+  <h1>Welcome to FeedConnect - Acceptor Section</h1>
+  <div class="btn-container">
+    <a href="newacceptor.html"><button>New Organization</button></a>
+    <a href="existingacceptor.html"><button>Existing Organization</button></a>
+  </div>
 </body>
 </html>
 
