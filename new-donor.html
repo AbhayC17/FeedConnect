@@ -233,8 +233,8 @@
           alert("OTP verified. Registration complete!");
           otpModal.style.display = "none";
           form.reset();
-        } else {
-          alert("Invalid OTP. Try again.");
+       } else {
+          alert("Invalid OTP. Please try again.");
         }
       } catch (err) {
         alert("Error verifying OTP.");
@@ -242,13 +242,12 @@
       }
     });
 
-    document.getElementById("closeModal").onclick = () => {
+    // Close modal functionality
+    document.getElementById("closeModal").addEventListener("click", function () {
       otpModal.style.display = "none";
-    };
+      otpInput.value = ""; // Clear input for next time
+    });
   </script>
 
 </body>
 </html>
-
-
-
