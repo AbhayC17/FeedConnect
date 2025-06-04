@@ -6,8 +6,69 @@
   <title>New Donor Registration</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* (CSS pasted from your prompt – already perfect) */
-    /* ... paste your CSS here ... */
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(to right, #e1bee7, #e0f7fa);
+      color: #333;
+      padding: 30px;
+    }
+    h1 {
+      text-align: center;
+      color: #4a148c;
+      margin-bottom: 30px;
+    }
+    .form-container {
+      background: white;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+    }
+    button {
+      background: #7b1fa2;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background: #6a1b9a;
+    }
+    #otpModal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+    }
+    #otpModalContent {
+      background: white;
+      max-width: 400px;
+      margin: 100px auto;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -15,26 +76,19 @@
     <h1>Donor Registration</h1>
     <label>Full Name</label>
     <input type="text" id="fullName" required>
-    
     <label>Donating Entity</label>
     <input type="text" id="entity" required>
-
-    <label>Contact Number</label>
+    <label>Contact</label>
     <input type="text" id="contact" required>
-
     <label>Email</label>
     <input type="email" id="email" required>
-
     <label>Address</label>
     <textarea id="address" required></textarea>
-
     <label>Location Link</label>
     <input type="url" id="location" required>
-
     <button onclick="sendOTP()">Submit and Verify</button>
   </div>
 
-  <!-- OTP Modal -->
   <div id="otpModal">
     <div id="otpModalContent">
       <h2>Enter OTP</h2>
@@ -46,11 +100,12 @@
 
   <script>
     let generatedOtp = "";
+    const webAppURL = "YOUR_DEPLOYED_WEBAPP_URL_HERE";
 
     function sendOTP() {
       const email = document.getElementById("email").value;
-
-      fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec", {
+      if (!email) return alert("Enter a valid email.");
+      fetch(webAppURL, {
         method: "POST",
         body: JSON.stringify({ type: "sendOTP", email }),
         headers: { "Content-Type": "application/json" }
@@ -61,43 +116,40 @@
           generatedOtp = data.otp;
           document.getElementById("otpModal").style.display = "block";
         } else {
-          alert("Failed to send OTP");
+          alert("Error sending OTP.");
         }
       });
     }
 
     function verifyOTP() {
       const enteredOtp = document.getElementById("otpInput").value;
+      if (enteredOtp !== generatedOtp) return alert("Incorrect OTP.");
 
-      if (enteredOtp === generatedOtp) {
-        // Save data
-        const payload = {
-          type: "saveData",
-          fullName: document.getElementById("fullName").value,
-          entity: document.getElementById("entity").value,
-          contact: document.getElementById("contact").value,
-          email: document.getElementById("email").value,
-          address: document.getElementById("address").value,
-          location: document.getElementById("location").value
-        };
+      const data = {
+        type: "saveData",
+        fullName: document.getElementById("fullName").value,
+        entity: document.getElementById("entity").value,
+        contact: document.getElementById("contact").value,
+        email: document.getElementById("email").value,
+        address: document.getElementById("address").value,
+        location: document.getElementById("location").value
+      };
 
-        fetch("https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxxcCH2qLvghw-MXSZWfPuxvsdjf1S1wY9xjypSOvIEHOh_cu2rTF0CwNnYKveIR5JY/exec/exec", {
-          method: "POST",
-          body: JSON.stringify(payload),
-          headers: { "Content-Type": "application/json" }
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            alert("Data saved successfully!");
-            document.getElementById("otpModal").style.display = "none";
-          } else {
-            alert("Error saving data.");
-          }
-        });
-      } else {
-        alert("Incorrect OTP");
-      }
+      fetch(webAppURL, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.json())
+      .then(response => {
+        if (response.success) {
+          alert("Data saved successfully!");
+          document.getElementById("otpModal").style.display = "none";
+          location.reload();
+        } else {
+          alert("Error saving data.");
+        }
+      });
     }
   </script>
 </body>
