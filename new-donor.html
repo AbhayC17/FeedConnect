@@ -166,71 +166,86 @@
     </div>
   </div>
 
-  <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby-cZLzTdtCE3tn9J4ObcpAC7nOQ_vJ3sDZYg8K9IPcno0fM3M5vJWk8eYK-u6VeAmhjg/exec';
+ <script>
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbxmTOkT3NZPuH6pWbQUlRCVk4OI26ohFD3qxnFeVOuRRTfIMDHLZJbTH0RrQf-7qhFAyA/exec';
 
-    const form = document.getElementById("newUserForm");
-    const otpModal = document.getElementById("otpModal");
-    const otpInput = document.getElementById("otpInput");
-    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+  const form = document.getElementById("newUserForm");
+  const otpModal = document.getElementById("otpModal");
+  const otpInput = document.getElementById("otpInput");
+  const verifyOtpBtn = document.getElementById("verifyOtpBtn");
 
-    let currentEmail = '';
+  let formData = {};
 
-    form.addEventListener("submit", async function(e) {
-      e.preventDefault();
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
 
-      const name = document.getElementById("newName").value;
-      const email = document.getElementById("newEmail").value;
-      currentEmail = email;
-
-      try {
-        const res = await fetch(scriptURL, {
-          method: 'POST',
-          body: JSON.stringify({ name, email }),
-          headers: { 'Content-Type': 'application/json' }
-        });
-
-        const result = await res.json();
-        if (result.success) {
-          otpModal.style.display = "block";
-        } else {
-          alert("Failed to send OTP. Try again.");
-        }
-      } catch (err) {
-        alert("Error sending OTP.");
-        console.error(err);
-      }
-    });
-
-    verifyOtpBtn.addEventListener("click", async function() {
-      const otp = otpInput.value.trim();
-
-      if (otp.length !== 6) {
-        alert("Enter a valid 6-digit OTP.");
-        return;
-      }
-
-      try {
-        const res = await fetch(`${scriptURL}?email=${currentEmail}&otp=${otp}`);
-        const result = await res.json();
-
-        if (result.verified) {
-          alert("OTP verified. Registration complete!");
-          otpModal.style.display = "none";
-          document.getElementById("newUserForm").reset();
-        } else {
-          alert("Invalid OTP. Try again.");
-        }
-      } catch (err) {
-        alert("Error verifying OTP.");
-        console.error(err);
-      }
-    });
-
-    document.getElementById("closeModal").onclick = () => {
-      otpModal.style.display = "none";
+    formData = {
+      name: document.getElementById("newName").value,
+      property: document.getElementById("propertyName").value,
+      email: document.getElementById("newEmail").value,
+      contact: document.getElementById("contact").value,
+      address: document.getElementById("address").value,
+      location: document.getElementById("locationLink").value
     };
-  </script>
+
+    try {
+      const res = await fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({ name: formData.name, email: formData.email }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        otpModal.style.display = "block";
+      } else {
+        alert("Failed to send OTP.");
+      }
+    } catch (err) {
+      alert("Error occurred. Try again.");
+      console.error(err);
+    }
+  });
+
+  verifyOtpBtn.addEventListener("click", async function() {
+    const otp = otpInput.value.trim();
+
+    if (otp.length !== 6) {
+      alert("Please enter a 6-digit OTP.");
+      return;
+    }
+
+    try {
+      const params = new URLSearchParams({
+        email: formData.email,
+        otp: otp,
+        name: formData.name,
+        property: formData.property,
+        contact: formData.contact,
+        address: formData.address,
+        location: formData.location
+      });
+
+      const res = await fetch(`${scriptURL}?${params.toString()}`);
+      const result = await res.json();
+
+      if (result.verified) {
+        alert("OTP Verified. Registration successful!");
+        otpModal.style.display = "none";
+        document.getElementById("newUserForm").reset();
+      } else {
+        alert("Invalid or expired OTP.");
+      }
+    } catch (err) {
+      alert("Verification failed.");
+      console.error(err);
+    }
+  });
+
+  document.getElementById("closeModal").onclick = () => {
+    otpModal.style.display = "none";
+  };
+</script>
 
 </body>
 </html>
