@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>New Donor Registration</title>
+  <title>FeedConnect - Donor Registration</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -12,11 +12,13 @@
       color: #333;
       padding: 30px;
     }
+
     h1 {
       text-align: center;
       color: #4a148c;
       margin-bottom: 30px;
     }
+
     .form-container {
       background: white;
       max-width: 800px;
@@ -25,18 +27,26 @@
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
+
+    h2 {
+      color: #6a1b9a;
+      margin-bottom: 20px;
+    }
+
     label {
       display: block;
       margin: 10px 0 5px;
       font-weight: bold;
     }
-    input, textarea {
+
+    input, select, textarea {
       width: 100%;
       padding: 10px;
       border-radius: 8px;
       border: 1px solid #ccc;
       margin-bottom: 15px;
     }
+
     button {
       background: #7b1fa2;
       color: white;
@@ -47,9 +57,34 @@
       font-size: 1em;
       transition: 0.3s ease;
     }
+
     button:hover {
       background: #6a1b9a;
     }
+
+    .support {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    .redirect-message {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1em;
+    }
+
+    .redirect-message a {
+      color: #4a148c;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .redirect-message a:hover {
+      text-decoration: underline;
+    }
+
+    /* OTP Modal */
     #otpModal {
       display: none;
       position: fixed;
@@ -60,6 +95,7 @@
       height: 100%;
       background-color: rgba(0,0,0,0.6);
     }
+
     #otpModalContent {
       background: white;
       max-width: 400px;
@@ -69,88 +105,135 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       text-align: center;
     }
+
+    #otpModal input {
+      margin-top: 10px;
+      text-align: center;
+      letter-spacing: 4px;
+    }
+
+    #closeModal {
+      margin-top: 10px;
+      color: red;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
+  <h1>Donor Registration - FeedConnect</h1>
+
   <div class="form-container">
-    <h1>Donor Registration</h1>
-    <label>Full Name</label>
-    <input type="text" id="fullName" required>
-    <label>Donating Entity</label>
-    <input type="text" id="entity" required>
-    <label>Contact</label>
-    <input type="text" id="contact" required>
-    <label>Email</label>
-    <input type="email" id="email" required>
-    <label>Address</label>
-    <textarea id="address" required></textarea>
-    <label>Location Link</label>
-    <input type="url" id="location" required>
-    <button onclick="sendOTP()">Submit and Verify</button>
+    <h2>New User Registration</h2>
+    <form id="newUserForm">
+      <label for="newName">Full Name</label>
+      <input type="text" id="newName" name="newName" required />
+
+      <label for="propertyName">Name of Property</label>
+      <input type="text" id="propertyName" name="propertyName" required />
+
+      <label for="newEmail">Email</label>
+      <input type="email" id="newEmail" name="newEmail" required />
+
+      <label for="contact">Contact Number</label>
+      <input type="tel" id="contact" name="contact" required />
+
+      <label for="address">Address</label>
+      <textarea id="address" name="address" required></textarea>
+
+      <label for="locationLink">Location Link (Google Maps)</label>
+      <input type="url" id="locationLink" name="locationLink" required />
+
+      <button type="submit">Register and Verify Email</button>
+
+      <div class="support">
+        Need help? Contact <a href="mailto:support@feedconnect.org">support@feedconnect.org</a>
+      </div>
+    </form>
+
+    <div class="redirect-message">
+      Already have an account? <a href="existing-user.html">Click here to login</a>
+    </div>
   </div>
 
+  <!-- OTP Modal -->
   <div id="otpModal">
     <div id="otpModalContent">
-      <h2>Enter OTP</h2>
-      <input type="text" id="otpInput" placeholder="Enter OTP">
-      <br><br>
-      <button onclick="verifyOTP()">Verify OTP</button>
+      <h3>Enter OTP</h3>
+      <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6"/>
+      <button id="verifyOtpBtn">Verify</button>
+      <div id="closeModal">Cancel</div>
     </div>
   </div>
 
   <script>
-    let generatedOtp = "";
-    const webAppURL = "https://script.google.com/macros/s/AKfycbwN9-g1EJyJ4tswyWg0jevkKT4CqKh1ZKQmetIQ4hFoqqlONIcESzlOo_QlsyNNAgLC/exec";
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby-cZLzTdtCE3tn9J4ObcpAC7nOQ_vJ3sDZYg8K9IPcno0fM3M5vJWk8eYK-u6VeAmhjg/exec';
 
-    function sendOTP() {
-      const email = document.getElementById("email").value;
-      if (!email) return alert("Enter a valid email.");
-      fetch(webAppURL, {
-        method: "POST",
-        body: JSON.stringify({ type: "sendOTP", email }),
-        headers: { "Content-Type": "application/json" }
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          generatedOtp = data.otp;
-          document.getElementById("otpModal").style.display = "block";
+    const form = document.getElementById("newUserForm");
+    const otpModal = document.getElementById("otpModal");
+    const otpInput = document.getElementById("otpInput");
+    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+
+    let currentEmail = '';
+
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("newName").value;
+      const email = document.getElementById("newEmail").value;
+      currentEmail = email;
+
+      try {
+        const res = await fetch(scriptURL, {
+          method: 'POST',
+          body: JSON.stringify({ name, email }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await res.json();
+        if (result.success) {
+          otpModal.style.display = "block";
         } else {
-          alert("Error sending OTP.");
+          alert("Failed to send OTP. Try again.");
         }
-      });
-    }
+      } catch (err) {
+        alert("Error sending OTP.");
+        console.error(err);
+      }
+    });
 
-    function verifyOTP() {
-      const enteredOtp = document.getElementById("otpInput").value;
-      if (enteredOtp !== generatedOtp) return alert("Incorrect OTP.");
+    verifyOtpBtn.addEventListener("click", async function() {
+      const otp = otpInput.value.trim();
 
-      const data = {
-        type: "saveData",
-        fullName: document.getElementById("fullName").value,
-        entity: document.getElementById("entity").value,
-        contact: document.getElementById("contact").value,
-        email: document.getElementById("email").value,
-        address: document.getElementById("address").value,
-        location: document.getElementById("location").value
-      };
+      if (otp.length !== 6) {
+        alert("Enter a valid 6-digit OTP.");
+        return;
+      }
 
-      fetch(webAppURL, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json" }
-      })
-      .then(res => res.json())
-      .then(response => {
-        if (response.success) {
-          alert("Data saved successfully!");
-          document.getElementById("otpModal").style.display = "none";
-          location.reload();
+      try {
+        const res = await fetch(`${scriptURL}?email=${currentEmail}&otp=${otp}`);
+        const result = await res.json();
+
+        if (result.verified) {
+          alert("OTP verified. Registration complete!");
+          otpModal.style.display = "none";
+          document.getElementById("newUserForm").reset();
         } else {
-          alert("Error saving data.");
+          alert("Invalid OTP. Try again.");
         }
-      });
-    }
+      } catch (err) {
+        alert("Error verifying OTP.");
+        console.error(err);
+      }
+    });
+
+    document.getElementById("closeModal").onclick = () => {
+      otpModal.style.display = "none";
+    };
   </script>
+
 </body>
 </html>
+
+
+
