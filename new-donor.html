@@ -176,31 +176,39 @@
 
     let currentEmail = '';
 
-    form.addEventListener("submit", async function(e) {
-      e.preventDefault();
+   form.addEventListener("submit", async function(e) {
+  e.preventDefault();
 
-      const name = document.getElementById("newName").value;
-      const email = document.getElementById("newEmail").value;
-      currentEmail = email;
+  const formData = new FormData(form);
+  const data = {
+    name: formData.get("newName"),
+    propertyName: formData.get("propertyName"),
+    email: formData.get("newEmail"),
+    contact: formData.get("contact"),
+    address: formData.get("address"),
+    locationLink: formData.get("locationLink")
+  };
 
-      try {
-        const res = await fetch(scriptURL, {
-          method: 'POST',
-          body: JSON.stringify({ name, email }),
-          headers: { 'Content-Type': 'application/json' }
-        });
-
-        const result = await res.json();
-        if (result.success) {
-          otpModal.style.display = "block";
-        } else {
-          alert("Failed to send OTP. Try again.");
-        }
-      } catch (err) {
-        alert("Error sending OTP.");
-        console.error(err);
-      }
+  try {
+    const res = await fetch(scriptURL, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
     });
+
+    const result = await res.json();
+
+    if (result.success) {
+      otpModal.style.display = "block";
+    } else {
+      alert("Failed to send OTP. Try again.");
+    }
+  } catch (err) {
+    alert("Error sending OTP.");
+    console.error(err);
+  }
+});
+
 
     verifyOtpBtn.addEventListener("click", async function() {
       const otp = otpInput.value.trim();
